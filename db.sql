@@ -8,5 +8,7 @@ CREATE TABLE IF NOT EXISTS `POST`(
   `username` VARCHAR(50) NOT NULL,
   `request` VARCHAR(255) NOT NULL,
   `location` varchar(50) NOT NULL,
-  `status` BOOLEAN NOT NULL  
+  `status` BOOLEAN NOT NULL,
+  `helper` VARCHAR(50) NOT NULL,
+  `done` BOOLEAN NOT NULL
 ) 

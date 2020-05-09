@@ -25,6 +25,7 @@ def search(username):
   myresult = mycursor.fetchall()
   return myresult
 
+
 def getPost(id):
   sql = "SELECT * FROM post where id = %s"
   val = (id,)
@@ -34,6 +35,7 @@ def getPost(id):
   myresult = mycursor.fetchall()
   return myresult
 
+
 def delete(id):
   sql = "DELETE FROM post WHERE id = %s"
   val = (id, )
@@ -41,8 +43,22 @@ def delete(id):
   mydb.commit()
 
 
-# def update(status):
-#     sql = "UPDATE customers SET address = 'Canyon 123' WHERE address = 'Valley 345'"
-#     val = (username, request, location)
-#     mycursor.execute(sql, val)
-#     mydb.commit()
+def done(id):
+  sql = "UPDATE post SET done = 1 WHERE id = %s"
+  val = (id,)
+  mycursor.execute(sql, val)
+  mydb.commit()
+
+
+def status(id):
+  sql = "UPDATE post SET status = 1 WHERE id = %s"
+  val = (id,)
+  mycursor.execute(sql, val)
+  mydb.commit()
+
+
+def helper(helper, id):
+  sql = "UPDATE post SET helper = %s WHERE id = %s"
+  val = (helper, id)
+  mycursor.execute(sql, val)
+  mydb.commit()
