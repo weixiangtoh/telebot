@@ -15,7 +15,6 @@ commands = {  # command description used in the "help" command
     'start'       : 'Get used to the bot',
     'help'        : 'Gives you information about the available commands',
     'ask'         : 'Type in your request'
-
 }
 
 # error handling if user isn't known yet
@@ -53,11 +52,11 @@ def command_start(m):
     if cid not in knownUsers:  # if user hasn't used the "/start" command yet:
         knownUsers.append(cid)  # save user id, so you could brodcast messages to all users of this bot later
         userStep[cid] = 0  # save user id and his current "command level", so he can use the "/getImage" command
-        bot.send_message(cid, "Hello, stranger, let me scan you...")
-        bot.send_message(cid, "Scanning complete, I know you now")
+        bot.send_message(cid, "Hello, stranger, you look good today")
+        bot.send_message(cid, "How can I help you? Please join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
         command_help(m)  # show the new user the help page
     else:
-        bot.send_message(cid, "I already know you, no need for me to scan you again!")
+        bot.send_message(cid, "I already know you, no need for me to know you again!")
 
 
 # handle the "/ask" command
@@ -66,8 +65,7 @@ def command_ask(m):
     cid = m.chat.id
     msg = bot.reply_to(m, 'Please enter your request!')
     userInfo['request_id'] = str(cid)
-    # cid will later be used to store things    
-    # answer = bot.reply_to(request, ask_text)
+    # cid will later be used to store things
     bot.register_next_step_handler(msg, process_request)
 
 
@@ -75,7 +73,7 @@ def process_request(m):
     request = m.text
     # ask_text = "Request number: " + str(cid)
     userInfo['request'] = request
-    # cid will later be used to store things    
+    # cid will later be used to store things
     answer = bot.reply_to(m, "Where is your location?")
     bot.register_next_step_handler(answer, process_location)
 
@@ -85,7 +83,8 @@ def process_location(m):
     location = m.text
     userInfo['location'] = location
     msg = "Request ID: " + userInfo['request_id'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
-    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:' + msg)
+    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
+    + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
 
 
 # help page
