@@ -75,22 +75,22 @@ def command_done(m):
     username = "@" + m.chat.username
     command_pending(m)
     search_arr = ConnectionManager.search(username)
-    done_ok = True
+
+    done_ok = False
 
     if len(search_arr) != 0:
         for array in search_arr:
             msg = ''
-            done = array[6]
-            if done:
-                done_ok = False
-                msg = bot.reply_to(m, 'No requests!')
-                exit
-    elif len(search_arr) == 0:
-        done_ok = False
-        msg = bot.reply_to(m, 'No requests!')
-        exit
+            status = array[4]
+            if not status:
+                done_ok = True
+    elif len(search_arr) > 0:
+        done_ok = True
 
-    if done_ok:
+    if not done_ok:
+        msg = bot.reply_to(m, 'No requests left!')
+        exit
+    else:
         msg = bot.reply_to(m, 'Which request is done? Type in the request ID')
         bot.register_next_step_handler(msg, process_done)
 
@@ -125,7 +125,6 @@ def command_delete(m):
             msg = ''
             status = array[4]
             if not status:
-                # print(status)
                 delete_ok = True
 
     elif len(search_arr) > 0:
