@@ -118,22 +118,24 @@ def command_delete(m):
     username = "@" + m.chat.username
     command_pending(m)
     search_arr = ConnectionManager.search(username)
-    delete_ok = True
+    delete_ok = False
 
     if len(search_arr) != 0:
         for array in search_arr:
             msg = ''
             status = array[4]
-            if status:
-                delete_ok = False
-                msg = bot.reply_to(m, 'No requests to delete!')
-                exit
-    elif len(search_arr) == 0:
-        delete_ok = False
+            if not status:
+                # print(status)
+                delete_ok = True
+
+    elif len(search_arr) > 0:
+        delete_ok = True
+
+    if not delete_ok:
         msg = bot.reply_to(m, 'No requests to delete!')
         exit
 
-    if delete_ok:
+    else:
         msg = bot.reply_to(m, 'Which request to delete? Type in the request ID')
         bot.register_next_step_handler(msg, process_delete)
 
