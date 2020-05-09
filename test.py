@@ -1,4 +1,5 @@
 import time
+import requests
 
 import telebot
 from telebot import types
@@ -86,6 +87,19 @@ def process_location(m):
     userInfo['location'] = location
     msg = "Request ID: " + userInfo['request_id'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
     bot.send_message(cid, 'Thank you for your request! Here are the details of your request:' + msg)
+    send_to_channel(userInfo)
+
+def send_to_channel(m):
+    request = m['request']
+    location = m['location']
+
+    msg = 'Person in need looking for kind person to '  + str(request) +'\n Location: ' + location
+
+    bot.send_message('@CovidReliefchannel', msg)
+
+
+
+
 
 
 # help page
