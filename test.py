@@ -69,18 +69,52 @@ def command_start(m):
 
 
 # handle the "/done" command
-# @bot.message_handler(commands=['done'])
-# def command_done(m):
-#     cid = m.chat.id
-#     username = "@" + m.chat.username
-#     command_pending(m)
-#     bot.send_message(cid, output)
+@bot.message_handler(commands=['done'])
+def command_done(m):
+    cid = m.chat.id
+    username = "@" + m.chat.username
+    command_pending(m)
+    search_arr = ConnectionManager.search(username)
+    done_ok = True
+
+    if len(search_arr) != 0:
+        for array in search_arr:
+            msg = ''
+            status = array[4]
+            if status:
+                done_ok = False
+                msg = bot.reply_to(m, 'No requests!')
+                exit
+    elif len(search_arr) == 0:
+        done_ok = False
+        msg = bot.reply_to(m, 'No requests!')
+        exit
+
+    if done_ok:
+        msg = bot.reply_to(m, 'Which request is done? Type in the request ID')
+        bot.register_next_step_handler(msg, process_done)
+
+
+def process_done(m):
+    cid = m.chat.id
+    request_id = m.text
+    username = "@" + m.chat.username
+    postInfo = ConnectionManager.getPost(request_id)
+
+    for item in postInfo:
+        if item[1] != username or len(item) == 0:
+            msg = bot.reply_to(m, 'Request number must be send by you!')
+            bot.register_next_step_handler(msg, process_done)
+            return
+
+    ConnectionManager.done(request_id)
+    bot.send_message(cid, "Update successfully!")
 
 
 # handle the "/delete" command
 @bot.message_handler(commands=['delete'])
 def command_delete(m):
-    cid = m.chat.id
+    # cid = m.chat.id
     username = "@" + m.chat.username
     command_pending(m)
     search_arr = ConnectionManager.search(username)
@@ -153,7 +187,6 @@ def command_pending(m):
 def command_ask(m):
     msg = bot.reply_to(m, 'Please enter your request!')
     userInfo['username'] = "@" + str(m.chat.username)
-    # cid will later be used to store things
     bot.register_next_step_handler(msg, process_request)
 
 
@@ -192,16 +225,23 @@ def send_to_channel(m, request_id):
 
 def gen_markup():
     markup = InlineKeyboardMarkup()
-    markup.row_width = 1
-    markup.add(InlineKeyboardButton(text="I can help!", callback_data= 'yes'))
+    markup.row_width = 3
+    markup.add(InlineKeyboardButton(text="I can help!", callback_data= 'yes'), 
+               InlineKeyboardButton(text = "Contact", url='t.me/' + str(userInfo['username'][1:])))
+    
     return markup
 
 #url='t.me/' + str(userInfo['username'][1:]))
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    
-        #Update table -> change status from 0 to 1, add call.from
+    #Update table -> change status from 0 to 1, add call.from
+    bot.send_message(update.message.chat_id, str(update.message.from_user.username))
+
+    #Update table -> change status from 0 to 1, add call.from
+    #bot.send_message(from(call), 'You are now helping ' ) #for the helper
+    #bot.send_message( , 'You are now being helped by ') #for the requester, button with "done"
+
     bot.answer_callback_query(call.id, 'Confirmation Successful!')
 
 
