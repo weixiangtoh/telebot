@@ -80,8 +80,8 @@ def command_done(m):
     if len(search_arr) != 0:
         for array in search_arr:
             msg = ''
-            status = array[4]
-            if status:
+            done = array[6]
+            if done:
                 done_ok = False
                 msg = bot.reply_to(m, 'No requests!')
                 exit
