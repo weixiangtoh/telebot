@@ -156,13 +156,14 @@ def process_delete(m):
     bot.send_message(cid, "Deleted successfully!")
 
 
-# handle the "/pending" command
-@bot.message_handler(commands=['pending'])
+# handle the "/status" command
+# pending means someone is currently helping with errand, but NOT done!
+@bot.message_handler(commands=['status']) 
 def command_pending(m):
     cid = m.chat.id
     username = "@" + m.chat.username
     search_arr = ConnectionManager.search(username)
-    output = 'PENDING Requests:\n'
+    output = 'Current Requests:\n'
 
     if len(search_arr) != 0:
         for array in search_arr:
@@ -171,17 +172,28 @@ def command_pending(m):
             request = array[2]
             location = array[3]
             status = array[4]
-            if not status:
+            done = array[6]
+
+            if not done and status:
                 msg = "\nRequest Number: " + str(request_id) + "\nRequest: " + str(request) + "\nLocation: " + str(location)
-                msg += "\nStatus: PENDING\n"
+                msg += "\nStatus: CURRENTLY DOING\n"
+            
+            elif not done and not status:
+                msg = "\nRequest Number: " + str(request_id) + "\nRequest: " + str(request) + "\nLocation: " + str(location)
+                msg += "\nStatus: NOT PICKED UP\n"
+            
+
             output += "============================================\n" + msg 
+
     else:
-        output += "\nNO MORE PENDING REQUESTS\n"
+        output += "\nNO MORE REQUESTS\n"
 
 
     output += "============================================\n" + "\nTo make a request, /ask and get more /help here"
 
     bot.send_message(cid, output)
+
+
 
 
 # handle the "/ask" command
