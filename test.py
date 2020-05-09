@@ -231,18 +231,22 @@ def gen_markup():
     
     return markup
 
-#url='t.me/' + str(userInfo['username'][1:]))
-
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    #Update table -> change status from 0 to 1, add call.from
-    bot.send_message(update.message.chat_id, str(update.message.from_user.username))
-
-    #Update table -> change status from 0 to 1, add call.from
-    #bot.send_message(from(call), 'You are now helping ' ) #for the helper
-    #bot.send_message( , 'You are now being helped by ') #for the requester, button with "done"
-
     bot.answer_callback_query(call.id, 'Confirmation Successful!')
+    username = call.from_user.username
+    # print(call.from_user)
+    # print(username)
+    text_msg = call.message.text
+    # print(text_msg)
+    num = ''
+    for i in text_msg:
+        if i.isdigit():
+            num += i
+    request_id = num
+    # print(request_id)
+    ConnectionManager.helper(username,request_id)
+    ConnectionManager.status(request_id)
 
 
 # help page
