@@ -20,8 +20,9 @@ commands = {  # command description used in the "help" command
     'start'       : 'Get used to the bot',
     'help'        : 'Gives you information about the available commands',
     'ask'         : 'Type in your request',
-    'pending'     : 'Check all your pending requests'
-    # 'done'        : 'See all completed requests'
+    'pending'     : 'Check all your pending requests',
+    'done'        : 'Changing status of request to completed',
+    'delete'      : 'Delete pending requests'
 }
 
 
@@ -69,11 +70,54 @@ def command_start(m):
 
 # handle the "/done" command
 # @bot.message_handler(commands=['done'])
-# def command_requests(m):
+# def command_done(m):
 #     cid = m.chat.id
 #     username = "@" + m.chat.username
 #     command_pending(m)
 #     bot.send_message(cid, output)
+
+
+# handle the "/delete" command
+@bot.message_handler(commands=['delete'])
+def command_delete(m):
+    cid = m.chat.id
+    username = "@" + m.chat.username
+    command_pending(m)
+    search_arr = ConnectionManager.search(username)
+    delete_ok = True
+
+    if len(search_arr) != 0:
+        for array in search_arr:
+            msg = ''
+            status = array[4]
+            if status:
+                delete_ok = False
+                msg = bot.reply_to(m, 'No requests to delete!')
+                exit
+    elif len(search_arr) == 0:
+        delete_ok = False
+        msg = bot.reply_to(m, 'No requests to delete!')
+        exit
+
+    if delete_ok:
+        msg = bot.reply_to(m, 'Which request to delete? Type in the request ID')
+        bot.register_next_step_handler(msg, process_delete)
+
+
+def process_delete(m):
+    cid = m.chat.id
+    request_id = m.text
+    username = "@" + m.chat.username
+    postInfo = ConnectionManager.getPost(request_id)
+
+    for item in postInfo:
+        if item[1] != username or len(item) == 0:
+            msg = bot.reply_to(m, 'Request number must be send by you!')
+            bot.register_next_step_handler(msg, process_delete)
+            return
+
+    ConnectionManager.delete(request_id)
+    bot.send_message(cid, "Deleted successfully!")
 
 
 # handle the "/pending" command
@@ -82,24 +126,22 @@ def command_pending(m):
     cid = m.chat.id
     username = "@" + m.chat.username
     search_arr = ConnectionManager.search(username)
-
-    # print(search_arr)
     output = 'PENDING Requests:\n'
 
-    if len(search_arr) == 0:
-        output += "NO MORE PENDING REQUESTS"
-    else:
+    if len(search_arr) != 0:
         for array in search_arr:
             msg = ''
             request_id = array[0]
             request = array[2]
             location = array[3]
             status = array[4]
-            # msg = "\nRequest Number: " + str(request_id) + "\nRequest: " + str(request) + "\nLocation: " + str(location)
             if not status:
                 msg = "\nRequest Number: " + str(request_id) + "\nRequest: " + str(request) + "\nLocation: " + str(location)
                 msg += "\nStatus: PENDING\n"
             output += "============================================\n" + msg 
+    else:
+        output += "\nNO MORE PENDING REQUESTS\n"
+
 
     output += "============================================\n" + "\nTo make a request, /ask and get more /help here"
 
@@ -118,7 +160,6 @@ def command_ask(m):
 def process_request(m):
     request = m.text
     userInfo['request'] = request
-    # cid will later be used to store things
     answer = bot.reply_to(m, "Where is your location?")
     bot.register_next_step_handler(answer, process_location)
 
@@ -131,21 +172,21 @@ def process_location(m):
     bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
     + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
     insert_database(userInfo)
-    send_to_channel(userInfo)
 
 
 def insert_database(userInfo):
     username = userInfo['username']
     request = userInfo['request']
     location = userInfo['location']
-    ConnectionManager.create(username, request, location)
+    request_id = ConnectionManager.create(username, request, location)
+    send_to_channel(userInfo, request_id)
 
 
-def send_to_channel(m):
-    username = m['username']
+def send_to_channel(m, request_id):
+    # username = m['username']
     request = m['request']
     location = m['location']
-    msg = 'Username: ' + str(username) + '\nPerson in need looking for kind person to '  + str(request) +'\nLocation: ' + location
+    msg = 'Request ID: ' + str(request_id) + '\nPerson in need looking for kind person to '  + str(request) +'\nLocation: ' + location
     bot.send_message('@CovidReliefchannel', msg, reply_markup=gen_markup())
 
 
