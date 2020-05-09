@@ -8,9 +8,11 @@ TOKEN = '1222858951:AAHeVtfjJodsUS_Pg4yybK3fAzRtkRqo_Go'
 
 knownUsers = []  # todo: save these in a file,
 userStep = {}  # so they won't reset every time the bot restarts
-userInfo = {'request_id' : '',
+userInfo = {'username' : '',
             'request'    : '',
-            'location'   : ''}
+            'location'   : '',
+            'status'     : False}
+
 
 commands = {  # command description used in the "help" command
     'start'       : 'Get used to the bot',
@@ -40,7 +42,7 @@ def listener(messages):
     for m in messages:
         if m.content_type == 'text':
             # print the sent message to the console
-            print(str(m.chat.first_name) + " [" + str(m.chat.id) + "]: " + m.text)
+            print(str(m.chat.username) + " [" + str(m.chat.id) + "]: " + m.text)
 
 
 bot = telebot.TeleBot(TOKEN)
@@ -64,9 +66,8 @@ def command_start(m):
 # handle the "/ask" command
 @bot.message_handler(commands=['ask'])
 def command_ask(m):
-    cid = m.chat.id
     msg = bot.reply_to(m, 'Please enter your request!')
-    userInfo['request_id'] = str(cid)
+    userInfo['username'] = "@" + str(m.chat.username)
     # cid will later be used to store things
     bot.register_next_step_handler(msg, process_request)
 
@@ -83,18 +84,16 @@ def process_location(m):
     cid = m.chat.id
     location = m.text
     userInfo['location'] = location
-    msg = "Request ID: " + userInfo['request_id'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
-     bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
+    msg = "Request ID: " + userInfo['username'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
+    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
     + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
     send_to_channel(userInfo)
 
 def send_to_channel(m):
-    request_id = m['request_id']
+    username = m['username']
     request = m['request']
     location = m['location']
-
-    msg = 'Request_id: ' + str(request_id) + '\nPerson in need looking for kind person to '  + str(request) +'\nLocation: ' + location
-
+    msg = 'Username: ' + str(username) + '\nPerson in need looking for kind person to '  + str(request) +'\nLocation: ' + location
     bot.send_message('@CovidReliefchannel', msg)
 
 
