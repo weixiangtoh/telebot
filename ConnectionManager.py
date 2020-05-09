@@ -20,11 +20,9 @@ def search(username):
     sql = "SELECT * FROM post where username = %s"
     val = (username,)
     mycursor = mydb.cursor()
-    # mycursor.execute("SELECT * FROM customers")
     mycursor.execute(sql, val)
     myresult = mycursor.fetchall()
     return myresult
-    # mydb.commit()
 
 
 # def update(id):
