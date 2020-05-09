@@ -17,6 +17,7 @@ commands = {  # command description used in the "help" command
     'ask'         : 'Type in your request'
 }
 
+
 # error handling if user isn't known yet
 # (obsolete once known users are saved to file, because all users
 #   had to use the /start command and are therefore known to the bot)
@@ -71,7 +72,6 @@ def command_ask(m):
 
 def process_request(m):
     request = m.text
-    # ask_text = "Request number: " + str(cid)
     userInfo['request'] = request
     # cid will later be used to store things
     answer = bot.reply_to(m, "Where is your location?")
