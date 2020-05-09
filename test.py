@@ -192,9 +192,17 @@ def send_to_channel(m, request_id):
 
 def gen_markup():
     markup = InlineKeyboardMarkup()
-    markup.row_width = 2
-    markup.add(InlineKeyboardButton(text="I can help!", url="http://t.me/wxcovidBOT"))
+    markup.row_width = 1
+    markup.add(InlineKeyboardButton(text="I can help!", callback_data= 'yes'))
     return markup
+
+#url='t.me/' + str(userInfo['username'][1:]))
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    
+        #Update table -> change status from 0 to 1, add call.from
+    bot.answer_callback_query(call.id, 'Confirmation Successful!')
 
 
 # help page
