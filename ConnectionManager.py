@@ -13,12 +13,22 @@ def create(username, request, location):
     sql = "INSERT INTO post (username, request, location) VALUES (%s, %s, %s)"
     val = (username, request, location)
     mycursor.execute(sql, val)
-
     mydb.commit()
 
-def update(username, request, location):
-    sql = "INSERT INTO post (username, request, location) VALUES (%s, %s, %s)"
-    val = (username, request, location)
+
+def search(username):
+    sql = "SELECT * FROM post where username = %s"
+    val = (username,)
+    mycursor = mydb.cursor()
+    # mycursor.execute("SELECT * FROM customers")
     mycursor.execute(sql, val)
+    myresult = mycursor.fetchall()
+    return myresult
+    # mydb.commit()
 
-    mydb.commit()
+
+# def update(id):
+#     sql = "INSERT INTO post (username, request, location) VALUES (%s, %s, %s)"
+#     val = (username, request, location)
+#     mycursor.execute(sql, val)
+#     mydb.commit()

@@ -17,7 +17,8 @@ userInfo = {'username' : '',
 commands = {  # command description used in the "help" command
     'start'       : 'Get used to the bot',
     'help'        : 'Gives you information about the available commands',
-    'ask'         : 'Type in your request'
+    'ask'         : 'Type in your request',
+    'requests'    : 'See all your requests'
 }
 
 
@@ -63,6 +64,40 @@ def command_start(m):
         bot.send_message(cid, "I already know you, no need for me to know you again!")
 
 
+
+# handle the "/start" command
+@bot.message_handler(commands=['requests'])
+def command_requests(m):
+    cid = m.chat.id
+    username = "@" + m.chat.username
+    search_arr = ConnectionManager.search(username)
+
+    print(search_arr)
+    output = ''
+
+    for array in search_arr:
+        msg = ''
+        request_id = array[0]
+        request = array[2]
+        location = array[3]
+        status = array[4]
+        msg = "Request ID: " + request_id + "\nRequest: " + 
+
+
+
+    # if output 
+
+    # if cid not in knownUsers:  # if user hasn't used the "/start" command yet:
+    #     knownUsers.append(cid)  # save user id, so you could brodcast messages to all users of this bot later
+    #     userStep[cid] = 0  # save user id and his current "command level", so he can use the "/getImage" command
+    #     bot.send_message(cid, "Hello, stranger, you look good today")
+    #     bot.send_message(cid, "How can I help you? Please join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
+    #     command_help(m)  # show the new user the help page
+    # else:
+    bot.send_message(cid, output)
+
+
+
 # handle the "/ask" command
 @bot.message_handler(commands=['ask'])
 def command_ask(m):
@@ -96,7 +131,6 @@ def insert_database(userInfo):
     request = userInfo['request']
     location = userInfo['location']
     ConnectionManager.create(username, request, location)
-
 
 
 def send_to_channel(m):
