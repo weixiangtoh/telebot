@@ -86,14 +86,16 @@ def process_location(m):
     location = m.text
     userInfo['location'] = location
     msg = "Request ID: " + userInfo['request_id'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
-    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:' + msg)
+     bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
+    + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
     send_to_channel(userInfo)
 
 def send_to_channel(m):
+    request_id = m['request_id']
     request = m['request']
     location = m['location']
 
-    msg = 'Person in need looking for kind person to '  + str(request) +'\n Location: ' + location
+    msg = 'Request_id: ' + str(request_id) + '\nPerson in need looking for kind person to '  + str(request) +'\nLocation: ' + location
 
     bot.send_message('@CovidReliefchannel', msg)
 
