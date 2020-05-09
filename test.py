@@ -20,7 +20,7 @@ commands = {  # command description used in the "help" command
     'start'       : 'Get used to the bot',
     'help'        : 'Gives you information about the available commands',
     'ask'         : 'Type in your request',
-    'pending'     : 'Check all your pending requests',
+    'status'      : 'Check all your current requests',
     'done'        : 'Changing status of request to completed',
     'delete'      : 'Delete pending requests'
 }
