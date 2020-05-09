@@ -3,6 +3,7 @@ import requests
 
 import telebot
 from telebot import types
+import ConnectionManager
 
 TOKEN = '1222858951:AAHeVtfjJodsUS_Pg4yybK3fAzRtkRqo_Go'
 
@@ -10,8 +11,7 @@ knownUsers = []  # todo: save these in a file,
 userStep = {}  # so they won't reset every time the bot restarts
 userInfo = {'username' : '',
             'request'    : '',
-            'location'   : '',
-            'status'     : False}
+            'location'   : ''}
 
 
 commands = {  # command description used in the "help" command
@@ -87,7 +87,17 @@ def process_location(m):
     msg = "Request ID: " + userInfo['username'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
     bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
     + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
+    insert_database(userInfo)
     send_to_channel(userInfo)
+
+
+def insert_database(userInfo):
+    username = userInfo['username']
+    request = userInfo['request']
+    location = userInfo['location']
+    ConnectionManager.create(username, request, location)
+
+
 
 def send_to_channel(m):
     username = m['username']
