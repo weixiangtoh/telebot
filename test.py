@@ -7,6 +7,9 @@ TOKEN = '1222858951:AAHeVtfjJodsUS_Pg4yybK3fAzRtkRqo_Go'
 
 knownUsers = []  # todo: save these in a file,
 userStep = {}  # so they won't reset every time the bot restarts
+userInfo = {'request_id' : '',
+            'request'    : '',
+            'location'   : ''}
 
 commands = {  # command description used in the "help" command
     'start'       : 'Get used to the bot',
@@ -61,13 +64,28 @@ def command_start(m):
 @bot.message_handler(commands=['ask'])
 def command_ask(m):
     cid = m.chat.id
-    request = m.text
-    ask_text = f"Please enter your request! {cid}"
+    msg = bot.reply_to(m, 'Please enter your request!')
+    userInfo['request_id'] = str(cid)
+    # cid will later be used to store things    
+    # answer = bot.reply_to(request, ask_text)
+    bot.register_next_step_handler(msg, process_request)
 
-    msg = bot.reply_to(request, 'How old are you?')
-    bot.register_next_step_handler(msg, process_age_step)
-    
-    bot.send_message(cid, ask_text)
+
+def process_request(m):
+    request = m.text
+    # ask_text = "Request number: " + str(cid)
+    userInfo['request'] = request
+    # cid will later be used to store things    
+    answer = bot.reply_to(m, "Where is your location?")
+    bot.register_next_step_handler(answer, process_location)
+
+
+def process_location(m):
+    cid = m.chat.id
+    location = m.text
+    userInfo['location'] = location
+    msg = "Request ID: " + userInfo['request_id'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
+    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:' + msg)
 
 
 # help page
