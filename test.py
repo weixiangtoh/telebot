@@ -176,23 +176,20 @@ def command_pending(m):
             if not done and status:
                 msg = "\nRequest Number: " + str(request_id) + "\nRequest: " + str(request) + "\nLocation: " + str(location)
                 msg += "\nStatus: CURRENTLY DOING\n"
+                output += "=====================================\n" + msg 
             
             elif not done and not status:
                 msg = "\nRequest Number: " + str(request_id) + "\nRequest: " + str(request) + "\nLocation: " + str(location)
                 msg += "\nStatus: NOT PICKED UP\n"
-            
-
-            output += "============================================\n" + msg 
+                output += "=====================================\n" + msg 
 
     else:
         output += "\nNO MORE REQUESTS\n"
 
 
-    output += "============================================\n" + "\nTo make a request, /ask and get more /help here"
+    output += "=====================================\n" + "\nTo make a request, /ask and get more /help here"
 
     bot.send_message(cid, output)
-
-
 
 
 # handle the "/ask" command
