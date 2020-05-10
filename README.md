@@ -21,6 +21,7 @@ MySQL connector
 PhpMyAdmin uses WAMP server (remote)
 
 Commands:
+
     /start       : 'Get used to the bot',
     /help        : 'Gives you information about the available commands',
     /ask         : 'Type in your request',
