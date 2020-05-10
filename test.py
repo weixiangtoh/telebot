@@ -214,17 +214,15 @@ def process_location(m):
     cid = m.chat.id
     location = m.text
     userInfo['location'] = location
-    msg = "Request ID: " + userInfo['username'] + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
-    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
-    + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
-    insert_database(userInfo)
 
-
-def insert_database(userInfo):
     username = userInfo['username']
     request = userInfo['request']
     location = userInfo['location']
     request_id = ConnectionManager.create(username, request, location)
+
+    msg = "Request ID: " + str(request_id) + "\nRequest: " + userInfo['request'] + "\nLocation: " + userInfo['location'] 
+    bot.send_message(cid, 'Thank you for your request! Here are the details of your request:\n' + msg 
+    + "\nPlease join our main channel for updates!\nhttps://t.me/joinchat/AAAAAFMxZPdTUyqLDH6mGw")
     send_to_channel(userInfo, request_id)
 
 
