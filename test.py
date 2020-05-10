@@ -7,7 +7,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import ConnectionManager
 
 
-TOKEN = '1222858951:AAHeVtfjJodsUS_Pg4yybK3fAzRtkRqo_Go'
+TOKEN = '<token>'
 
 knownUsers = []  # todo: save these in a file,
 userStep = {}  # so they won't reset every time the bot restarts
