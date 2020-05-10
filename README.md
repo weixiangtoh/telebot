@@ -34,3 +34,6 @@ Commands:
 Limitations:
   - Has to be run on remote/local server
   - this goes the same for database
+
+
+Demo link: http://t.me/wxcovidBOT
