@@ -231,7 +231,13 @@ def insert_database(userInfo):
 def send_to_channel(m, request_id):
     # username = m['username']
     request = m['request']
-    location = m['location']
+    address = m['location']
+
+    location = ''
+    for i in address:
+        if i != " ":
+            location += i
+            
     msg = 'Request ID: ' + str(request_id) + '\nPerson in need looking for kind person to '  + str(request) +'\nLocation: ' + location
     bot.send_message('@CovidReliefchannel', msg, reply_markup=gen_markup())
 
