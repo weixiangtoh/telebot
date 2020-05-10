@@ -81,8 +81,8 @@ def command_done(m):
     if len(search_arr) != 0:
         for array in search_arr:
             msg = ''
-            status = array[4]
-            if not status:
+            done = array[6]
+            if not done:
                 done_ok = True
     elif len(search_arr) > 0:
         done_ok = True
