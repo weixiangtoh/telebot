@@ -37,3 +37,4 @@ Limitations:
 
 
 Demo link: http://t.me/wxcovidBOT
+Submission link: https://devpost.com/software/covid-ofiq9e
