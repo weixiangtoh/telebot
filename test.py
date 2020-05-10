@@ -124,7 +124,8 @@ def command_delete(m):
         for array in search_arr:
             msg = ''
             status = array[4]
-            if not status:
+            done = array[6]
+            if not status or not done:
                 delete_ok = True
 
     elif len(search_arr) > 0:
